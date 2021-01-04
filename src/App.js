@@ -1,34 +1,56 @@
-import React, { Component } from "react"
-import logo from "./logo.svg"
-import "./App.css"
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
+import {
+  ApolloClient,
+  gql,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+} from "@apollo/client";
+
+// const EXCHANGE_RATES = gql`
+//   query GetExchangeRates {
+//     rates(currency: "USD") {
+//       currency
+//       rate
+//     }
+//   }
+// `;
+
+const query = gql`
+  {
+    bikeParks {
+      id
+      name
+      lat
+      long
+    }
   }
+`;
 
-  handleClick = api => e => {
-    e.preventDefault()
+const client = new ApolloClient({
+  uri: "/.netlify/functions/graphql",
+  cache: new InMemoryCache(),
+});
 
-    this.setState({ loading: true })
-    fetch("/.netlify/functions/" + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
-  }
+function ExchangeRates() {
+  const { loading, error, data } = useQuery(query);
 
-  render() {
-    const { loading, msg } = this.state
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
 
-    return (
-      <p>
-        <button onClick={this.handleClick("hello")}>{loading ? "Loading..." : "Call Lambda"}</button>
-        <button onClick={this.handleClick("async-dadjoke")}>{loading ? "Loading..." : "Call Async Lambda"}</button>
-        <br />
-        <span>{msg}</span>
-      </p>
-    )
-  }
+  return (
+    <>
+      {data.bikeParks.map((bikePark) => (
+        <div key={bikePark.id}>
+          {bikePark.name} - {JSON.parse(bikePark.lat)} -{" "}
+          {JSON.parse(bikePark.long)}
+        </div>
+      ))}
+    </>
+  );
 }
 
 class App extends Component {
@@ -40,11 +62,14 @@ class App extends Component {
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
-          <LambdaDemo />
+
+          <ApolloProvider client={client}>
+            <ExchangeRates />
+          </ApolloProvider>
         </header>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;
