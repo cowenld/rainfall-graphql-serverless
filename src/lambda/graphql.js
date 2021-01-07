@@ -1,29 +1,25 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
-const bikeParks = [
-  {
-    id: 1,
-    name: "Aston Hill",
-    postcode: "HP22 5NQ",
-    address: "Aston Hill, Halton, Buckinghamshire, HP22 5NQ",
-    website: "https://www.rideastonhill.co.uk/",
-    lat: "51.782909",
-    long: "-0.709155",
-  },
-  {
-    id: 2,
-    name: "Rogate",
-    postcode: "GU31 5DL",
-    address: "Rogate, Petersfield, GU31 5DL",
-    website: "https://www.b1ke.com/b1keparks/rogate/",
-    lat: "51.03414",
-    long: "-0.85510",
-  },
-];
+const _ = require("underscore");
+const faunaDb = require("faunadb");
+const { RESTDataSource } = require("apollo-datasource-rest");
+const { addDays, format } = require("date-fns");
+const q = faunaDb.query;
+
+var client = new faunaDb.Client({ secret: process.env.FAUNA });
 
 const typeDefs = gql`
   type Query {
-    hello: String
     bikeParks: [BikePark]
+    rainfall(stationReference: String): [Rainfall]
+    closestRainfallStation(lat: String, long: String): RainfallStation
+    weather(lat: String, long: String): Weather
+  }
+  type Rainfall {
+    date: String
+    rainfall: RainfallValue
+  }
+  type RainfallStation {
+    stationReference: String
   }
   type BikePark {
     id: ID!
@@ -34,15 +30,115 @@ const typeDefs = gql`
     lat: String
     long: String
   }
+  type RainfallValue {
+    value: Float
+  }
+  type Weather {
+    current: String
+  }
 `;
+
+function getDistance(station) {
+  return Math.sqrt(
+    Math.pow(station.easting, 2) + Math.pow(station.northing, 2)
+  );
+}
+
+class RainfallStationsAPI extends RESTDataSource {
+  constructor() {
+    super();
+    this.baseURL =
+      "https://environment.data.gov.uk/flood-monitoring/id/stations/";
+  }
+
+  async getStationsWithinLatLong({ lat, long }) {
+    const params = _.extend(
+      { parameter: "rainfall", _view: "full", dist: 10 },
+      { lat, long }
+    );
+    const urlParams = new URLSearchParams(params).toString();
+
+    const response = await this.get(`?${urlParams}`);
+    const closestStation = response.items.reduce((a, b) => {
+      const aDistance = getDistance(a);
+      const bDistance = getDistance(b);
+      return aDistance < bDistance ? a : b;
+    });
+    return closestStation;
+  }
+
+  async getRainfallFromStation({ stationReference }) {
+    const previousDate = format(addDays(new Date(), -4), "yyyy-MM-dd");
+    const response = await this.get(
+      `${stationReference}/readings?since=${previousDate}&_limit=3000&parameter=rainfall&_sorted=true`
+    );
+
+    const groupedByDate = response.items.reduce((acc, currentValue) => {
+      const date = currentValue.dateTime.split("T")[0];
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(currentValue);
+      return acc;
+    }, {});
+
+    const totalRainfallByDay = Object.keys(groupedByDate).map((date) => {
+      return {
+        date,
+        rainfall: groupedByDate[date].reduce((a, b) => {
+          return { value: a.value + b.value };
+        }),
+      };
+    });
+    return totalRainfallByDay;
+  }
+}
+
+class OpenWeatherMapApi extends RESTDataSource {
+  constructor() {
+    super();
+    this.baseURL = "https://api.openweathermap.org/data/2.5/onecall";
+  }
+
+  async getWeatherFromLatLong({ lat, long }) {
+    const params = _.extend({ lat, lon: long });
+    const urlParams = new URLSearchParams(params).toString();
+    console.log("getWeatherFromLatLong", urlParams);
+
+    // https://api.openweathermap.org/data/2.5/onecall?lat=51.782909&lon=-0.709155&exclude=minutely&appid=9bdcf77c11828ba84719618f87c1acf1
+
+    const response = await this.get(
+      `?${urlParams}&exclude=minutely&appid=9bdcf77c11828ba84719618f87c1acf1`
+    );
+    console.log("aewaeawe", response);
+  }
+}
 
 const resolvers = {
   Query: {
-    hello: (root, args, context) => {
-      return "Hello, world 2!";
+    closestRainfallStation: async (_source, args, { dataSources }) => {
+      return dataSources.rainfallStationsAPI.getStationsWithinLatLong(args);
     },
-    bikeParks() {
-      return bikeParks;
+    rainfall: async (_source, args, { dataSources }) => {
+      return dataSources.rainfallStationsAPI.getRainfallFromStation(args);
+    },
+    weather: async (_source, args, { dataSources }) => {
+      console.log("work please");
+      return dataSources.openWeatherMapApi.getWeatherFromLatLong(args);
+    },
+    bikeParks: async (parent, args, context) => {
+      const results = await client.query(
+        q.Map(
+          q.Paginate(q.Match(q.Index("all_bikesParks"))),
+          q.Lambda((x) => q.Get(x))
+        )
+      );
+      return results.data.map((bikePark) => ({
+        id: bikePark.ref.id,
+        name: bikePark.data.properties.name,
+        lat: bikePark.data.geometry.coordinates[1],
+        long: bikePark.data.geometry.coordinates[0],
+      }));
     },
   },
 };
@@ -50,6 +146,12 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  dataSources: () => {
+    return {
+      rainfallStationsAPI: new RainfallStationsAPI(),
+      openWeatherMapApi: new OpenWeatherMapApi(),
+    };
+  },
   introspection: true,
   playground: true,
 });
