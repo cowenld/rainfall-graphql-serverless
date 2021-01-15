@@ -12,7 +12,6 @@ const typeDefs = gql`
     bikeParks: [BikePark]
     rainfall(stationReference: String): [Rainfall]
     closestRainfallStation(lat: String, long: String): RainfallStation
-    weather(lat: String, long: String): Weather
   }
   type Rainfall {
     date: String
@@ -32,9 +31,6 @@ const typeDefs = gql`
   }
   type RainfallValue {
     value: Float
-  }
-  type Weather {
-    current: String
   }
 `;
 
@@ -94,26 +90,6 @@ class RainfallStationsAPI extends RESTDataSource {
   }
 }
 
-class OpenWeatherMapApi extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = "https://api.openweathermap.org/data/2.5/onecall";
-  }
-
-  async getWeatherFromLatLong({ lat, long }) {
-    const params = _.extend({ lat, lon: long });
-    const urlParams = new URLSearchParams(params).toString();
-    console.log("getWeatherFromLatLong", urlParams);
-
-    // https://api.openweathermap.org/data/2.5/onecall?lat=51.782909&lon=-0.709155&exclude=minutely&appid=9bdcf77c11828ba84719618f87c1acf1
-
-    const response = await this.get(
-      `?${urlParams}&exclude=minutely&appid=9bdcf77c11828ba84719618f87c1acf1`
-    );
-    console.log("aewaeawe", response);
-  }
-}
-
 const resolvers = {
   Query: {
     closestRainfallStation: async (_source, args, { dataSources }) => {
@@ -121,10 +97,6 @@ const resolvers = {
     },
     rainfall: async (_source, args, { dataSources }) => {
       return dataSources.rainfallStationsAPI.getRainfallFromStation(args);
-    },
-    weather: async (_source, args, { dataSources }) => {
-      console.log("work please");
-      return dataSources.openWeatherMapApi.getWeatherFromLatLong(args);
     },
     bikeParks: async (parent, args, context) => {
       const results = await client.query(
@@ -149,7 +121,6 @@ const server = new ApolloServer({
   dataSources: () => {
     return {
       rainfallStationsAPI: new RainfallStationsAPI(),
-      openWeatherMapApi: new OpenWeatherMapApi(),
     };
   },
   introspection: true,

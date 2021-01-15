@@ -8,6 +8,8 @@ const InformationBar = () => {
     bikeParkMapState: { selectedBikePark, closestRainfallStation, rainfall },
   } = useContext(BikeParkMapContext);
 
+  if(!selectedBikePark) return null;
+
   return (
     <div className={styles.bar}>
       {selectedBikePark && selectedBikePark.name} -

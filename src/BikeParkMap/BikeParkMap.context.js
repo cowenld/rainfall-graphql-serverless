@@ -37,6 +37,7 @@ const initialState = {
 const BikeParkMapContext = React.createContext({ ...initialState });
 
 const BikeParkMapReducer = (state, action) => {
+  console.log("action", action);
   switch (action.type) {
     case "selectBikePark":
       return {
@@ -56,10 +57,10 @@ const BikeParkMapReducer = (state, action) => {
     case "weatherForBikePark":
       return {
         ...state,
-        weather: action.payload.weather,
+        weather: action.payload.weather.current,
       };
     default:
-      throw new Error();
+      throw new Error(JSON.stringify(action));
   }
 };
 
@@ -71,6 +72,7 @@ const BikeParkMapProvider = (props) => {
 
   const [getWeather] = useLazyQuery(GET_WEATHER, {
     onCompleted: (data) => {
+      console.log('getWeather onCompleted', data);
       setBikeParkMapState({
         type: "weather",
         payload: data,
@@ -110,12 +112,12 @@ const BikeParkMapProvider = (props) => {
         long: bikePark.long,
       },
     });
-    getWeather({
-      variables: {
-        lat: bikePark.lat,
-        long: bikePark.long,
-      },
-    });
+    // getWeather({
+    //   variables: {
+    //     lat: bikePark.lat,
+    //     long: bikePark.long,
+    //   },
+    // });
   }
 
   return (
