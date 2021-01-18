@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { format } from "date-fns";
-import { Card, Icon, Dimmer, Loader, Button } from "semantic-ui-react";
+import { Card, Dimmer, Loader, Button } from "semantic-ui-react";
 import { BikeParkMapContext } from "../BikeParkMap.context";
 import Svg from "../Svg/svg";
 import styles from "./InformationBar.module.css";
