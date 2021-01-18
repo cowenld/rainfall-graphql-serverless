@@ -23,8 +23,8 @@ const bikeParks = gql`
 `;
 
 const mtbIcon = new Icon({
-  iconUrl: require("./mtb.png"),
-  iconSize: [25, 25],
+  iconUrl: require("./bikePin.svg"),
+  iconSize: [40, 40],
 });
 
 const Markers = () => {
