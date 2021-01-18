@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { Marker } from "react-leaflet";
+import L from "leaflet";
+import { Marker, useMap } from "react-leaflet";
 import { BikeParkMapContext } from "../../BikeParkMap.context";
 import { gql, useQuery } from "@apollo/client";
 import { Icon } from "leaflet";
@@ -9,6 +10,12 @@ const bikeParks = gql`
     bikeParks {
       id
       name
+      website
+      trails {
+        red
+        blue
+        black
+      }
       lat
       long
     }
@@ -22,7 +29,11 @@ const mtbIcon = new Icon({
 
 const Markers = () => {
   const { loading, error, data } = useQuery(bikeParks);
-  const { selectBikePark } = useContext(BikeParkMapContext);
+  const {
+    bikeParkMapState: { selectedBikePark },
+    selectBikePark,
+  } = useContext(BikeParkMapContext);
+  const map = useMap();
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
@@ -34,7 +45,10 @@ const Markers = () => {
       position={[bikePark.lat, bikePark.long]}
       eventHandlers={{
         click: () => {
-          selectBikePark(bikePark);
+          if (!selectedBikePark || bikePark.id !== selectedBikePark.id) {
+            selectBikePark(bikePark);
+            map.panTo(new L.LatLng(bikePark.lat, bikePark.long));
+          }
         },
       }}
     />

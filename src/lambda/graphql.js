@@ -26,8 +26,14 @@ const typeDefs = gql`
     address: String
     postcode: String
     website: String
+    trails: Trails
     lat: String
     long: String
+  }
+  type Trails {
+    red: Int
+    black: Int
+    blue: Int
   }
   type RainfallValue {
     value: Float
@@ -108,6 +114,8 @@ const resolvers = {
       return results.data.map((bikePark) => ({
         id: bikePark.ref.id,
         name: bikePark.data.properties.name,
+        website: bikePark.data.properties.website,
+        trails: bikePark.data.properties.trails,
         lat: bikePark.data.geometry.coordinates[1],
         long: bikePark.data.geometry.coordinates[0],
       }));

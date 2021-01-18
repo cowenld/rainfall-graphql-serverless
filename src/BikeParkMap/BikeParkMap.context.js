@@ -20,29 +20,27 @@ const GET_RAINFALL = gql`
   }
 `;
 
-const GET_WEATHER = gql`
-  query WeatherForBikePark($lat: String!, $long: String!) {
-    weather(lat: $lat, long: $long) {
-      current
-    }
-  }
-`;
-
 const initialState = {
   selectedBikePark: null,
   closestRainfallStation: null,
   rainfall: null,
+  loadingWeatherData: false,
 };
 
 const BikeParkMapContext = React.createContext({ ...initialState });
 
 const BikeParkMapReducer = (state, action) => {
-  console.log("action", action);
   switch (action.type) {
     case "selectBikePark":
       return {
         ...state,
         selectedBikePark: action.payload,
+        loadingWeatherData: true,
+      };
+    case "deselectBikePark":
+      return {
+        ...state,
+        selectedBikePark: null,
       };
     case "closestRainfallStation":
       return {
@@ -53,11 +51,7 @@ const BikeParkMapReducer = (state, action) => {
       return {
         ...state,
         rainfall: action.payload.rainfall,
-      };
-    case "weatherForBikePark":
-      return {
-        ...state,
-        weather: action.payload.weather.current,
+        loadingWeatherData: false,
       };
     default:
       throw new Error(JSON.stringify(action));
@@ -69,16 +63,6 @@ const BikeParkMapProvider = (props) => {
     BikeParkMapReducer,
     initialState
   );
-
-  const [getWeather] = useLazyQuery(GET_WEATHER, {
-    onCompleted: (data) => {
-      console.log('getWeather onCompleted', data);
-      setBikeParkMapState({
-        type: "weather",
-        payload: data,
-      });
-    },
-  });
 
   const [getRainfall] = useLazyQuery(GET_RAINFALL, {
     onCompleted: (data) => {
@@ -105,24 +89,26 @@ const BikeParkMapProvider = (props) => {
   });
 
   function selectBikePark(bikePark) {
-    setBikeParkMapState({ type: "selectBikePark", payload: bikePark });
-    getStations({
-      variables: {
-        lat: bikePark.lat,
-        long: bikePark.long,
-      },
-    });
-    // getWeather({
-    //   variables: {
-    //     lat: bikePark.lat,
-    //     long: bikePark.long,
-    //   },
-    // });
+    if (!bikePark) {
+      setBikeParkMapState({ type: "deselectBikePark" });
+    } else {
+      setBikeParkMapState({ type: "selectBikePark", payload: bikePark });
+      getStations({
+        variables: {
+          lat: bikePark.lat,
+          long: bikePark.long,
+        },
+      });
+    }
   }
 
   return (
     <BikeParkMapContext.Provider
-      value={{ bikeParkMapState, setBikeParkMapState, selectBikePark }}
+      value={{
+        bikeParkMapState,
+        setBikeParkMapState,
+        selectBikePark,
+      }}
     >
       {props.children}
     </BikeParkMapContext.Provider>

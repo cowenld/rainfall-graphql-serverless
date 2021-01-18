@@ -1,7 +1,27 @@
 .bar {
-  background: white;
-  z-index: 500;
+  z-index: 501;
   position: absolute;
   bottom: 0;
+  display: flex;
+  overflow-x: auto;
   width: 100%;
+}
+
+.card {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
+  margin-right: 10px !important;
+  margin-left: 10px !important;
+  margin-bottom: 10px !important;
+  min-width: 160px !important;
+  width: 160px !important;
+  max-height: 160px !important;
+  min-height: 160px !important;
+  overflow: hidden !important;
+  margin-top: 0 !important;
+}
+
+.header {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
