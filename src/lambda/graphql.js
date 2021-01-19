@@ -1,15 +1,11 @@
 const { ApolloServer, gql } = require("apollo-server-lambda");
 const _ = require("underscore");
-const faunaDb = require("faunadb");
 const { RESTDataSource } = require("apollo-datasource-rest");
 const { addDays, format } = require("date-fns");
-const q = faunaDb.query;
-
-var client = new faunaDb.Client({ secret: process.env.FAUNA });
+const bikeParks = require("./bikeParks");
 
 const typeDefs = gql`
   type Query {
-    bikeParks: [BikePark]
     rainfall(stationReference: String): [Rainfall]
     closestRainfallStation(lat: String, long: String): RainfallStation
   }
@@ -19,21 +15,6 @@ const typeDefs = gql`
   }
   type RainfallStation {
     stationReference: String
-  }
-  type BikePark {
-    id: ID!
-    name: String
-    address: String
-    postcode: String
-    website: String
-    trails: Trails
-    lat: String
-    long: String
-  }
-  type Trails {
-    red: Int
-    black: Int
-    blue: Int
   }
   type RainfallValue {
     value: Float
@@ -104,28 +85,12 @@ const resolvers = {
     rainfall: async (_source, args, { dataSources }) => {
       return dataSources.rainfallStationsAPI.getRainfallFromStation(args);
     },
-    bikeParks: async (parent, args, context) => {
-      const results = await client.query(
-        q.Map(
-          q.Paginate(q.Match(q.Index("all_bikesParks"))),
-          q.Lambda((x) => q.Get(x))
-        )
-      );
-      return results.data.map((bikePark) => ({
-        id: bikePark.ref.id,
-        name: bikePark.data.properties.name,
-        website: bikePark.data.properties.website,
-        trails: bikePark.data.properties.trails,
-        lat: bikePark.data.geometry.coordinates[1],
-        long: bikePark.data.geometry.coordinates[0],
-      }));
-    },
   },
 };
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: [bikeParks.typeDef, typeDefs],
+  resolvers: [bikeParks.resolvers, resolvers],
   dataSources: () => {
     return {
       rainfallStationsAPI: new RainfallStationsAPI(),
