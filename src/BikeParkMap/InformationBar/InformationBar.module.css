@@ -19,10 +19,37 @@
   min-height: 160px !important;
   overflow: hidden !important;
   margin-top: 0 !important;
+  text-align: center;
 }
 
 .header {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.meta {
+  font-size: 11px !important;
+}
+
+.description {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 8px;
+}
+
+.rainfallValue {
+  font-weight: bold;
+}
+
+.mm {
+  font-size: 11px;
+  color: #666;
+}
+
+.icon {
+  font-size: 30px !important;
+  display: block !important;
 }

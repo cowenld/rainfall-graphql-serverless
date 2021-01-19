@@ -15,16 +15,25 @@ const Loading = () => (
 
 const RainfallCard = ({ rainfallItem }) => {
   const date = new Date(rainfallItem.date);
+  const formattedRainfallDate = format(date, "iii");
+
   return (
     <Card className={styles.card}>
       <Card.Content>
         <Card.Header className={styles.header}>
-          {format(date, "iii")}
+          {formattedRainfallDate === format(new Date(), "iii")
+            ? "Today"
+            : formattedRainfallDate}
         </Card.Header>
-        <Card.Meta>{format(date, "dd/MM")}</Card.Meta>
-        <Card.Description>
-          <Icon color="blue" name="rain" />{" "}
-          {rainfallItem.rainfall.value.toFixed(2)} mm
+        <Card.Meta className={styles.meta}>{format(date, "dd/MM")}</Card.Meta>
+        <Card.Description className={styles.description}>
+          <Icon color="blue" name="rain" className={styles.icon} />
+          <div>
+            <span className={styles.rainfallValue}>
+              {rainfallItem.rainfall.value.toFixed(2)}
+            </span>
+            <span className={styles.mm}>mm</span>
+          </div>
         </Card.Description>
       </Card.Content>
     </Card>
