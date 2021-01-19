@@ -8,6 +8,7 @@
 }
 
 .card {
+  background: rgba(240, 240, 240, 0.75) !important;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
   margin-right: 10px !important;
   margin-left: 10px !important;

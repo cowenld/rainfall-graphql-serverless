@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { format } from "date-fns";
-import { Card, Dimmer, Loader, Button } from "semantic-ui-react";
+import { Card, Dimmer, Loader, Button, Icon } from "semantic-ui-react";
 import { BikeParkMapContext } from "../BikeParkMap.context";
 import Svg from "../Svg/svg";
 import styles from "./InformationBar.module.css";
@@ -16,12 +16,18 @@ const Loading = () => (
 const RainfallCard = ({ rainfallItem }) => {
   const date = new Date(rainfallItem.date);
   return (
-    <Card
-      header={format(date, "iii")}
-      meta={format(date, "dd/MM")}
-      description={rainfallItem.rainfall.value}
-      className={styles.card}
-    />
+    <Card className={styles.card}>
+      <Card.Content>
+        <Card.Header className={styles.header}>
+          {format(date, "iii")}
+        </Card.Header>
+        <Card.Meta>{format(date, "dd/MM")}</Card.Meta>
+        <Card.Description>
+          <Icon color="blue" name="rain" />{" "}
+          {rainfallItem.rainfall.value.toFixed(2)} mm
+        </Card.Description>
+      </Card.Content>
+    </Card>
   );
 };
 
@@ -80,15 +86,14 @@ const InformationBar = () => {
                 selectBikePark(null);
               }}
             />
-            <Button
+            {/* <Button
               circular
               positive
               icon="expand arrows alternate"
               className={styles.button}
               onClick={() => {
-                console.log("expand");
               }}
-            />
+            /> */}
           </Card.Content>
         </Card>
         {loadingWeatherData && <Loading />}
