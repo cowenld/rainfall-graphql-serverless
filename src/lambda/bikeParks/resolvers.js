@@ -17,6 +17,8 @@ const resolvers = {
         name: bikePark.data.properties.name,
         website: bikePark.data.properties.website,
         trails: bikePark.data.properties.trails,
+        northing: bikePark.data.geometry.northing,
+        easting: bikePark.data.geometry.easting,
         lat: bikePark.data.geometry.coordinates[1],
         long: bikePark.data.geometry.coordinates[0],
       }));

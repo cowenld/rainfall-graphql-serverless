@@ -2,8 +2,18 @@ import React, { useReducer } from "react";
 import { gql, useLazyQuery } from "@apollo/client";
 
 const GET_STATIONS = gql`
-  query RainfallStations($lat: String!, $long: String!) {
-    closestRainfallStation(lat: $lat, long: $long) {
+  query RainfallStations(
+    $lat: String!
+    $long: String!
+    $northing: Float!
+    $easting: Float!
+  ) {
+    closestRainfallStation(
+      lat: $lat
+      long: $long
+      northing: $northing
+      easting: $easting
+    ) {
       stationReference
     }
   }
@@ -97,6 +107,8 @@ const BikeParkMapProvider = (props) => {
         variables: {
           lat: bikePark.lat,
           long: bikePark.long,
+          northing: bikePark.northing,
+          easting: bikePark.easting,
         },
       });
     }

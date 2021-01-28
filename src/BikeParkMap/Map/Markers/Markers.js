@@ -16,6 +16,8 @@ const bikeParks = gql`
         blue
         black
       }
+      northing
+      easting
       lat
       long
     }

@@ -13,6 +13,8 @@ const typeDef = gql`
     postcode: String
     website: String
     trails: Trails
+    northing: Float
+    easting: Float
     lat: String
     long: String
   }
