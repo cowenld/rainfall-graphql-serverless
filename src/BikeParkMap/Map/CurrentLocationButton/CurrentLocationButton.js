@@ -1,24 +1,26 @@
 import React from "react";
 import { useMap } from "react-leaflet";
+import { Button, Icon } from "semantic-ui-react";
 import styles from "./CurrentLocationButton.module.css";
 
 const CurrentLocationButton = () => {
   const map = useMap();
 
   return (
-    <button
+    <Button
+      icon
+      basic
+      size='small'
       className={styles.button}
       onClick={() => {
-        // set loading
         map.locate({
           setView: true,
           maxZoom: 10,
         });
-        // false loading
       }}
     >
-      Get Current Location
-    </button>
+      <Icon color="grey" name="location arrow" className={styles.icon} />
+    </Button>
   );
 };
 

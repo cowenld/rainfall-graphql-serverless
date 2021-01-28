@@ -95,14 +95,6 @@ const InformationBar = () => {
                 selectBikePark(null);
               }}
             />
-            {/* <Button
-              circular
-              positive
-              icon="expand arrows alternate"
-              className={styles.button}
-              onClick={() => {
-              }}
-            /> */}
           </Card.Content>
         </Card>
         {loadingWeatherData && <Loading />}
