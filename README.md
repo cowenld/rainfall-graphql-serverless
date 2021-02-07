@@ -1,21 +1,21 @@
-# Rainfall BikePark Map
+# Bike Park Rainfall Map
 
-https://zen-shockley-16d687.netlify.app/(https://zen-shockley-16d687.netlify.app/)
+https://zen-shockley-16d687.netlify.app/
 
-Leaflet map with historical rainfall data from the https://environment.data.gov.uk(https://environment.data.gov.uk) based on bike park co-ordinates which are stored on faundaDB. Uses graphql apollo server and client.
+Leaflet map with historical rainfall data from the https://environment.data.gov.uk based on bike park co-ordinates which are stored on faundaDB. Uses graphql apollo server and client.
 
 - Leaflet
 - Create React App
 - Graphql Apollo Server Lambda & Client
 - faunaDB
 
-## Create-React-App-Lambda(https://github.com/netlify/create-react-app-lambda)
+## [Create-React-App-Lambda](https://github.com/netlify/create-react-app-lambda)
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/create-react-app-lambda&utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex)
 
 ## Project Setup
 
-**Source**: The main addition to base Create-React-App(https://github.com/facebook/create-react-app) is a new folder: `src/lambda`. This folder is specified and can be changed in the `package.json` script: `"build:lambda": "netlify-lambda build src/lambda"`.
+**Source**: The main addition to base [Create-React-App](https://github.com/facebook/create-react-app) is a new folder: `src/lambda`. This folder is specified and can be changed in the `package.json` script: `"build:lambda": "netlify-lambda build src/lambda"`.
 
 **Dist**: Each JavaScript file in there will be built for Netlify Function deployment in `/built-lambda`, specified in [`netlify.toml`](https://www.netlify.com/docs/netlify-toml-reference/?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex).
 
@@ -109,20 +109,20 @@ You are free to set up your `tsconfig.json` and `tslint` as you see fit.
 
 ## Choices
 
-### Domain-oriented Graphql(https://github.com/betaflag/graphql-server-scaffolding)
+### [Domain-oriented Graphql](https://github.com/betaflag/graphql-server-scaffolding)
 
 Organised files by business domain. Bike Parks folder contains all its resolvers, data, models. The principal benefit of this structure is its modularity. For me I find projects like this easier to navigate at scale.
 
-### Apollo Client(https://github.com/apollographql/apollo-client) and Apollo Server Lambda(https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda)
+### [Apollo Client](https://github.com/apollographql/apollo-client) and [Apollo Server Lambda](https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda)
 
 Apollo Server is an open-source, spec-compliant GraphQL server that's compatible with any GraphQL client, including Apollo Client. It's the best way to build a production-ready, self-documenting GraphQL API that can use data from any source.
 
-### FaunaDB(https://github.com/fauna/faunadb-js)
+### [FaunaDB](https://github.com/fauna/faunadb-js)
 
 Fauna is the data API for client-serverless applications. Fauna transforms the traditional DBMS into a Data API that gives you all of the capabilities of an old-guard database, without sacrificing flexibility, scale, and performance.
 
 for local development you will need the faunaDB key.
 
-### React Leaflet(https://react-leaflet.js.org/)
+### [React Leaflet](https://react-leaflet.js.org/)
 
 Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps.
