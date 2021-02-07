@@ -4,14 +4,13 @@ https://zen-shockley-16d687.netlify.app/
 
 Leaflet map with historical rainfall data from the https://environment.data.gov.uk based on bike park co-ordinates which are stored on faundaDB. Uses graphql apollo server and client.
 
-- Leaflet
-- Create React App
-- Graphql Apollo Server Lambda & Client
-- faunaDB
+- [Leaflet](https://github.com/Leaflet/Leaflet)
+- [Create React App Lambda](https://github.com/netlify/create-react-app-lambda)
+- [Create React App](https://github.com/facebook/create-react-app)
+- [Graphql Apollo Server Lambda & Client](https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda)
+- [faunaDB](https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-lambda)
 
 ## [Create-React-App-Lambda](https://github.com/netlify/create-react-app-lambda)
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg?utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify/create-react-app-lambda&utm_source=github&utm_medium=swyx-CRAL&utm_campaign=devex)
 
 ## Project Setup
 
