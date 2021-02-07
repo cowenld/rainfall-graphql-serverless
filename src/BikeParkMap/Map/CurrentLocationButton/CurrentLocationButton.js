@@ -6,17 +6,21 @@ import styles from "./CurrentLocationButton.module.css";
 const CurrentLocationButton = () => {
   const map = useMap();
 
+  function centerOnLocation() {
+    map.locate({
+      setView: true,
+      maxZoom: 10,
+    });
+  }
+
   return (
     <Button
       icon
       basic
-      size='small'
+      size="small"
       className={styles.button}
       onClick={() => {
-        map.locate({
-          setView: true,
-          maxZoom: 10,
-        });
+        centerOnLocation();
       }}
     >
       <Icon color="grey" name="location arrow" className={styles.icon} />

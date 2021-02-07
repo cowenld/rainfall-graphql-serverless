@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { format } from "date-fns";
-import { Card, Dimmer, Loader, Button, Icon } from "semantic-ui-react";
+import { Card, Dimmer, Loader, Button } from "semantic-ui-react";
 import { BikeParkMapContext } from "../BikeParkMap.context";
-import Svg from "../Svg/svg";
+import RainfallCard from "./RainfallCard/RainfallCard";
+import Trails from "./Trails/Trails";
 import styles from "./InformationBar.module.css";
 
 const Loading = () => (
@@ -12,58 +12,6 @@ const Loading = () => (
     </Dimmer>
   </Card>
 );
-
-const RainfallCard = ({ rainfallItem }) => {
-  const date = new Date(rainfallItem.date);
-  const formattedRainfallDate = format(date, "iii");
-
-  return (
-    <Card className={styles.card}>
-      <Card.Content>
-        <Card.Header className={styles.header}>
-          {formattedRainfallDate === format(new Date(), "iii")
-            ? "Today"
-            : formattedRainfallDate}
-        </Card.Header>
-        <Card.Meta className={styles.meta}>{format(date, "dd/MM")}</Card.Meta>
-        <Card.Description className={styles.description}>
-          <Icon color="blue" name="rain" className={styles.icon} />
-          <div>
-            <span className={styles.rainfallValue}>
-              {rainfallItem.rainfall.value.toFixed(2)}
-            </span>
-            <span className={styles.mm}>mm</span>
-          </div>
-        </Card.Description>
-      </Card.Content>
-    </Card>
-  );
-};
-
-const Trails = ({ trails }) => {
-  const totalTrails = trails.black + trails.red + trails.blue;
-
-  return (
-    <>
-      {totalTrails === 0 && <>Empty show website</>}
-      {trails.blue > 0 && (
-        <>
-          <Svg name="blueRun" /> {trails.blue}
-        </>
-      )}
-      {trails.red > 0 && (
-        <>
-          <Svg name="redRun" /> {trails.red}
-        </>
-      )}
-      {trails.black > 0 && (
-        <>
-          <Svg name="blackRun" /> {trails.black}
-        </>
-      )}
-    </>
-  );
-};
 
 const InformationBar = () => {
   const {

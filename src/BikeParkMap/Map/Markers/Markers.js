@@ -25,7 +25,7 @@ const bikeParks = gql`
 `;
 
 const mtbIcon = new Icon({
-  iconUrl: require("./bikePin.svg"),
+  iconUrl: require("../../Svg/bikePing.svg"),
   iconSize: [40, 40],
 });
 
@@ -37,6 +37,13 @@ const Markers = () => {
   } = useContext(BikeParkMapContext);
   const map = useMap();
 
+  function panToBikePark(bikePark) {
+    if (!selectedBikePark || bikePark.id !== selectedBikePark.id) {
+      selectBikePark(bikePark);
+      map.panTo(new L.LatLng(bikePark.lat, bikePark.long));
+    }
+  }
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
@@ -47,10 +54,7 @@ const Markers = () => {
       position={[bikePark.lat, bikePark.long]}
       eventHandlers={{
         click: () => {
-          if (!selectedBikePark || bikePark.id !== selectedBikePark.id) {
-            selectBikePark(bikePark);
-            map.panTo(new L.LatLng(bikePark.lat, bikePark.long));
-          }
+          panToBikePark(bikePark);
         },
       }}
     />
