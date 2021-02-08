@@ -1,5 +1,5 @@
 import React from "react";
-import Svg from "../Svg/svg";
+import Svg from "../../Svg/svg";
 
 const Trails = ({ trails }) => {
   const totalTrails = trails.black + trails.red + trails.blue;

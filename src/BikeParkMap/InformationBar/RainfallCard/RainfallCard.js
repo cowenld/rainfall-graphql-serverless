@@ -1,7 +1,7 @@
 import React from "react";
 import { format } from "date-fns";
 import { Card, Icon } from "semantic-ui-react";
-import styles from "./InformationBar.module.css";
+import styles from "../InformationBar.module.css";
 
 const RainfallCard = ({ rainfallItem }) => {
   const date = new Date(rainfallItem.date);
