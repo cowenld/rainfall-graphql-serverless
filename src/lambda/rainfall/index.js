@@ -5,5 +5,5 @@ const { RainfallStationsAPI } = require("./RainfallStationsAPI");
 module.exports = {
   resolvers,
   typeDef,
-  RainfallStationsAPI,
+  RainfallStationsAPI
 };

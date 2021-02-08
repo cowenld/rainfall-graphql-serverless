@@ -5,10 +5,10 @@ const resolvers = {
     },
     closestRainfallStation: async (_source, args, { dataSources }) => {
       return dataSources.rainfallStationsAPI.getStationsWithinLatLong(args);
-    },
-  },
+    }
+  }
 };
 
 module.exports = {
-  resolvers,
+  resolvers
 };

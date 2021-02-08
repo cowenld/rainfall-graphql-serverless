@@ -34,7 +34,7 @@ const initialState = {
   selectedBikePark: null,
   closestRainfallStation: null,
   rainfall: null,
-  loadingWeatherData: false,
+  loadingWeatherData: false
 };
 
 const BikeParkMapContext = React.createContext({ ...initialState });
@@ -45,57 +45,57 @@ const BikeParkMapReducer = (state, action) => {
       return {
         ...state,
         selectedBikePark: action.payload,
-        loadingWeatherData: true,
+        loadingWeatherData: true
       };
     case "deselectBikePark":
       return {
         ...state,
-        selectedBikePark: null,
+        selectedBikePark: null
       };
     case "closestRainfallStation":
       return {
         ...state,
-        closestRainfallStation: action.payload.closestRainfallStation,
+        closestRainfallStation: action.payload.closestRainfallStation
       };
     case "rainfall":
       return {
         ...state,
         rainfall: action.payload.rainfall,
-        loadingWeatherData: false,
+        loadingWeatherData: false
       };
     default:
       throw new Error(JSON.stringify(action));
   }
 };
 
-const BikeParkMapProvider = (props) => {
+const BikeParkMapProvider = props => {
   const [bikeParkMapState, setBikeParkMapState] = useReducer(
     BikeParkMapReducer,
     initialState
   );
 
   const [getRainfall] = useLazyQuery(GET_RAINFALL, {
-    onCompleted: (data) => {
+    onCompleted: data => {
       setBikeParkMapState({
         type: "rainfall",
-        payload: data,
+        payload: data
       });
-    },
+    }
   });
 
   const [getStations] = useLazyQuery(GET_STATIONS, {
-    onCompleted: (data) => {
+    onCompleted: data => {
       setBikeParkMapState({
         type: "closestRainfallStation",
-        payload: data,
+        payload: data
       });
 
       getRainfall({
         variables: {
-          stationReference: data.closestRainfallStation.stationReference,
-        },
+          stationReference: data.closestRainfallStation.stationReference
+        }
       });
-    },
+    }
   });
 
   function selectBikePark(bikePark) {
@@ -108,8 +108,8 @@ const BikeParkMapProvider = (props) => {
           lat: bikePark.lat,
           long: bikePark.long,
           northing: bikePark.northing,
-          easting: bikePark.easting,
-        },
+          easting: bikePark.easting
+        }
       });
     }
   }
@@ -119,7 +119,7 @@ const BikeParkMapProvider = (props) => {
       value={{
         bikeParkMapState,
         setBikeParkMapState,
-        selectBikePark,
+        selectBikePark
       }}
     >
       {props.children}

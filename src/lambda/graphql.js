@@ -11,11 +11,11 @@ const server = new ApolloServer({
   resolvers: [bikeParks.resolvers, rainfall.resolvers],
   dataSources: () => {
     return {
-      rainfallStationsAPI: new rainfall.RainfallStationsAPI(),
+      rainfallStationsAPI: new rainfall.RainfallStationsAPI()
     };
   },
   introspection: true,
-  playground: true,
+  playground: true
 });
 
 exports.handler = server.createHandler();

@@ -3,5 +3,5 @@ const { typeDef } = require("./typeDef");
 
 module.exports = {
   resolvers,
-  typeDef,
+  typeDef
 };

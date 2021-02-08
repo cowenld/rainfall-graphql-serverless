@@ -9,7 +9,7 @@ const CurrentLocationButton = () => {
   function centerOnLocation() {
     map.locate({
       setView: true,
-      maxZoom: 10,
+      maxZoom: 10
     });
   }
 

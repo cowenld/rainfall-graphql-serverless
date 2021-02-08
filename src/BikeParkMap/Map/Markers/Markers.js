@@ -26,14 +26,14 @@ const bikeParks = gql`
 
 const mtbIcon = new Icon({
   iconUrl: require("../../Svg/bikePing.svg"),
-  iconSize: [40, 40],
+  iconSize: [40, 40]
 });
 
 const Markers = () => {
   const { loading, error, data } = useQuery(bikeParks);
   const {
     bikeParkMapState: { selectedBikePark },
-    selectBikePark,
+    selectBikePark
   } = useContext(BikeParkMapContext);
   const map = useMap();
 
@@ -47,7 +47,7 @@ const Markers = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
-  return data.bikeParks.map((bikePark) => (
+  return data.bikeParks.map(bikePark => (
     <Marker
       key={bikePark.id}
       icon={mtbIcon}
@@ -55,7 +55,7 @@ const Markers = () => {
       eventHandlers={{
         click: () => {
           panToBikePark(bikePark);
-        },
+        }
       }}
     />
   ));

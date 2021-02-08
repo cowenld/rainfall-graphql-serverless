@@ -16,7 +16,7 @@ const Loading = () => (
 const InformationBar = () => {
   const {
     bikeParkMapState: { selectedBikePark, rainfall, loadingWeatherData },
-    selectBikePark,
+    selectBikePark
   } = useContext(BikeParkMapContext);
 
   if (!selectedBikePark) return null;
@@ -48,7 +48,7 @@ const InformationBar = () => {
         {loadingWeatherData && <Loading />}
         {!loadingWeatherData &&
           rainfall &&
-          rainfall.map((rainfallItem) => (
+          rainfall.map(rainfallItem => (
             <RainfallCard rainfallItem={rainfallItem} key={rainfallItem.date} />
           ))}
       </div>

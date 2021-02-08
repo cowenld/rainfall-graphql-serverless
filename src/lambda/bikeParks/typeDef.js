@@ -24,5 +24,5 @@ const typeDef = gql`
 `;
 
 module.exports = {
-  typeDef,
+  typeDef
 };

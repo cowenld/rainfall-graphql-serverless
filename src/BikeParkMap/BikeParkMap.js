@@ -7,7 +7,7 @@ import { BikeParkMapProvider } from "./BikeParkMap.context";
 
 const client = new ApolloClient({
   uri: "/.netlify/functions/graphql",
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache()
 });
 
 const BikeParkMap = () => {
